@@ -1,0 +1,42 @@
+[
+  {
+    "id": "FW-001",
+    "priority": 10,
+    "source": "192.168.1.0/24",
+    "destination": "0.0.0.0/0",
+    "protocol": "TCP",
+    "destination_port": 80,
+    "action": "ALLOW",
+    "description": "Allow internal HTTP"
+  },
+  {
+    "id": "FW-002",
+    "priority": 20,
+    "source": "192.168.1.0/24",
+    "destination": "0.0.0.0/0",
+    "protocol": "TCP",
+    "destination_port": 443,
+    "action": "ALLOW",
+    "description": "Allow internal HTTPS"
+  },
+  {
+    "id": "FW-003",
+    "priority": 30,
+    "source": "0.0.0.0/0",
+    "destination": "0.0.0.0/0",
+    "protocol": "TCP",
+    "destination_port": 22,
+    "action": "DENY",
+    "description": "Deny SSH from all sources"
+  },
+  {
+    "id": "FW-004",
+    "priority": 40,
+    "source": "0.0.0.0/0",
+    "destination": "0.0.0.0/0",
+    "protocol": "ANY",
+    "destination_port": "ANY",
+    "action": "DENY",
+    "description": "Default deny"
+  }
+]
