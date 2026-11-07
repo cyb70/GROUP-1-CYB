@@ -57,6 +57,18 @@ class HIFIDSTests(unittest.TestCase):
         self.assertFalse(is_new)
         self.assertEqual(correlator.summaries()[0]["count"], 2)
 
+    def test_new_incident_after_correlation_window_is_preserved(self):
+        correlator = AlertCorrelator(window_seconds=5)
+        base = {"source_ip": "192.0.2.1", "destination_ip": "192.0.2.2",
+                "category": "TEST", "severity": "medium",
+                "timestamp": "2026-11-07T10:00:00+00:00", "event_id": "EV-1"}
+        correlator.add(base)
+        later = dict(base, event_id="EV-2", timestamp="2026-11-07T10:00:10+00:00")
+        _, is_new = correlator.add(later)
+        self.assertTrue(is_new)
+        self.assertEqual(len(correlator.summaries()), 2)
+        self.assertEqual([item["count"] for item in correlator.summaries()], [1, 1])
+
 
 if __name__ == "__main__":
     unittest.main()
