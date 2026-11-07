@@ -1,0 +1,16 @@
+[
+  {
+    "id": "SIG-SSH",
+    "description": "Connection attempt to SSH service",
+    "protocol": "TCP",
+    "destination_port": 22,
+    "severity": "medium"
+  },
+  {
+    "id": "SIG-TELNET",
+    "description": "Connection attempt to Telnet service",
+    "protocol": "TCP",
+    "destination_port": 23,
+    "severity": "high"
+  }
+]
