@@ -4,7 +4,12 @@ from datetime import datetime
 
 
 class IDS:
-    def __init__(self, signatures, scan_threshold=8, window_seconds=10):
+    def __init__(self, signatures, scan_threshold=4, window_seconds=10):
+        """Create an IDS; flag a scan after four unique ports in the time window.
+
+        The threshold is configurable so experiments can compare sensitivity
+        against false-positive rates on different traffic datasets.
+        """
         self.signatures = signatures
         self.scan_threshold = scan_threshold
         self.window_seconds = window_seconds
@@ -41,7 +46,10 @@ class IDS:
             alerts.append({
                 "category": "BEHAVIOUR-PORT-SCAN",
                 "severity": "high",
-                "description": f"Source contacted {len(unique_ports)} different ports within {self.window_seconds}s.",
+                "description": (
+                    f"Source contacted {len(unique_ports)} different ports "
+                    f"within {self.window_seconds}s (threshold: {self.scan_threshold})."
+                ),
                 "source_ip": event["source_ip"],
                 "destination_ip": event["destination_ip"],
                 "event_id": event["event_id"],
