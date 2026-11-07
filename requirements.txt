@@ -1,0 +1,2 @@
+# Core simulation uses only the Python standard library.
+# Optional dashboard/reporting dependencies can be added later.
