@@ -46,6 +46,26 @@ class HIFIDSTests(unittest.TestCase):
                     "description": "Test signature"}])
         self.assertEqual(len(ids.inspect(self.event)), 1)
 
+    def test_port_scan_alerts_at_four_unique_ports(self):
+        ids = IDS([], scan_threshold=4, window_seconds=10)
+        alerts = []
+        for index, port in enumerate([21, 22, 23, 25], start=1):
+            event = dict(self.event, event_id=f"SCAN-{index}",
+                         timestamp=f"2026-11-07T10:00:0{index}+00:00",
+                         source_ip="198.51.100.77", destination_port=port)
+            alerts = ids.inspect(event)
+        self.assertTrue(any(a["category"] == "BEHAVIOUR-PORT-SCAN" for a in alerts))
+
+    def test_repeated_same_port_does_not_trigger_scan(self):
+        ids = IDS([], scan_threshold=4, window_seconds=10)
+        alerts = []
+        for index in range(4):
+            event = dict(self.event, event_id=f"REPEAT-{index}",
+                         timestamp=f"2026-11-07T10:00:0{index}+00:00",
+                         source_ip="198.51.100.88", destination_port=22)
+            alerts.extend(ids.inspect(event))
+        self.assertFalse(any(a["category"] == "BEHAVIOUR-PORT-SCAN" for a in alerts))
+
     def test_alert_correlation_preserves_count(self):
         correlator = AlertCorrelator()
         alert = {"source_ip": "192.0.2.1", "destination_ip": "192.0.2.2",
